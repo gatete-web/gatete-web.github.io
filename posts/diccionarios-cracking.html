@@ -5,17 +5,17 @@
 		<title>Gatete: comparación diccionarios</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="../assets/css/main.css" />
-		<link rel="shortcut icon" href="../images/logo.jpg" type="image/jpg" />
+		<link rel="stylesheet" href="https://gatete.es/assets/css/main.css" />
+		<link rel="shortcut icon" href="https://gatete.es/images/logo.jpg" type="image/jpg" />
 		<meta name="keywords" content="Gatete, blog, post, diccionarios, cracking, reglas, Hashcat, hacking, cybersecurity, exploiting, passwords, security, español, spanish, ciberseguridad, seguridad, hacking ético, ethical hacking" />
 		<meta name="description" content="Poniendo a prueba los diccionarios más usados para hash cracking" />
 
-		<meta name="twitter:title" content="Comparando diccionarios populares de cracking de contraseñas." />
+		<meta name="twitter:title" content="Comparando diccionarios populares de hash cracking." />
 		<meta name="twitter:description" content="Poniendo a prueba reglas y diccionarios a la hora de crackear contraseñas." />
 		<meta name="twitter:image" content="https://gatete.es/images/avatar.png" />
 		<meta name="twitter:card" content="summary" />
 		<meta name="twitter:site" content="@3lulz" />
-		<meta property="og:title" content="Comparando diccionarios populares de cracking de contraseñas." />
+		<meta property="og:title" content="Comparando diccionarios populares de hash cracking" />
 		<meta property="og:description" content="Poniendo a prueba reglas y diccionarios a la hora de crackear contraseñas." />
 		<meta property="og:image" content="https://gatete.es/images/avatar.png" />
 		<meta property="og:image:width" content="400" />
@@ -31,11 +31,11 @@
 
 				<!-- Header -->
 					<header id="header">
-						<h1><a href="../">INICIO</a></h1>
+						<h1><a href="https://gatete.es/">INICIO</a></h1>
 						<nav class="links">
 							<ul>
-								<li><a href="/">Posts</a></li>
-								<li><a href="../enlaces.html">Enlaces</a></li>
+								<li><a href="https://gatete.es/posts/">Posts</a></li>
+								<li><a href="https://gatete.es/enlaces.html">Enlaces</a></li>
 							</ul>
 						</nav>
 						<nav class="main">
@@ -54,19 +54,19 @@
 							<section>
 								<ul class="links">
 									<li>
-										<a href="../">
+										<a href="https://gatete.es/">
 											<h3>INICIO</h3>
 											<p>Ir al inicio</p>
 										</a>
 									</li>
 									<li>
-										<a href="/">
+										<a href="https://gatete.es/posts/">
 											<h3>POSTS</h3>
 											<p>Ver todas mis publicaciones</p>
 										</a>
 									</li>
 									<li>
-										<a href="../enlaces.html">
+										<a href="https://gatete.es/enlaces.html">
 											<h3>ENLACES DE INTERÉS</h3>
 											<p>Links variados y valiosos</p>
 										</a>
@@ -83,19 +83,300 @@
 							<article class="post">
 								<header>
 									<div class="title">
-										<h2>En breve: poniendo a prueba los diccionarios más usados para hash cracking</h2>
+										<h2>Poniendo a prueba los diccionarios más usados para hash cracking</h2>
 									</div>
 									<div class="meta">
-										<time class="published" datetime="2020-12-XX">XX de diciembre, 2020</time>
-										<div class="author"><span class="name">Gatete</span><img src="../images/avatar.png" alt="" /></div>
+										<time class="published" datetime="2020-12-24">24 de diciembre, 2020</time>
+										<div class="author"><span class="name">Gatete</span><img src="https://gatete.es/images/avatar.png" alt="" /></div>
 									</div>
 								</header>
 
-								<p>Este post está siendo escrito y lo tendréis en breve :)</p>
+								<p>
+									Desde diccionarios populares como Rockyou o Kaonashi, hasta diccionarios menos conocidos como los de Weakpass o el de Cyclone que no dejan de ser valiosos. Desde reglas conocidas como best64 o OneRuleToRuleThemAll hasta otras menos conocidas como pueden ser las de Techtrip. Hoy veremos la cantidad de contraseñas que consiguen romper usando Hashcat y sacaremos conclusiones.	A medida que avance el post tendréis todos los links a los diccionarios y reglas, y a la web de donde saqué los hashes.
+								</p>
 
-								<span class="image featured"><img src="../images/pic02peque.jpg" alt="" /></span>
-							</article>
+								<p>
+									<b>Obteniendo los hashes, diccionarios y reglas.</b>
+								</p>
 
+								<p>
+									Lo primero que necesitaremos será conseguir listas de hashes adecuados. Para que nuestras pruebas salgan correctamente, estas deberían cumplir los siguientes puntos:
+								</p>	
+
+								<p>
+									<ul>
+										<li>Deben ser generados a partir de contraseñas reales, es decir, tienen que ser hashes de contraseñas que han sido usadas por personas y no que se hayan generado de alguna manera (aunque siempre van a haber hashes generados de un modo u otro lo común es que no sea así).</li>
+										<li>No deben ser listas muy conocidas, como por ejemplo provenientes de filtraciones antiguas de empresas, ya que la gran mayoría de diccionarios se crearon en base a estas listas, por lo que no sería preciso. Como curiosidad, en una de las primeras pruebas usando una lista de hashes antigua y el diccionario cyclone_hk, me sacó casi el 100% de contraseñas sin usar reglas.</li>
+										<li>Las funciones hash usadas en las listas tienen que ser rápidas. No tendría sentido usar hashes lentos de crackear como Bcrypt para conseguir la visión de efectividad de cada diccionario y reglas que pretendemos. Esto debido a que las contraseñas usadas por los usuarios no dependen del algoritmo empleado para generar el hash y a que el tiempo de cracking no nos permitiría realizar la gran mayoría de pruebas.</li>
+									</ul>
+								</p>
+
+								<p>
+									En mi caso, vi conveniente hacer las pruebas con fragmentos de una lista de hashes que cumplen todas las condiciones anteriores. Los hashes son MD5, lo cual es un hash rápido de crackear, y por eso se desaconseja su uso desde hace unos años. La lista tiene más de 6 millones de hashes (dependiendo de la prueba usaremos más o menos) que provienen de contraseñas usadas por usuarios en una empresa internacional, las cuales no están asociadas con información personal identificable, por lo que no hay ningún problema en usar esos hashes para nuestras pruebas. Este tipo de listas pueden ser descargadas desde la web de <a href="https://hashes.org/leaks.php">Hashes.org</a> bajo tu propia responsabilidad. Otro punto importante es que esta lista se encuentra pública desde este año, por lo tanto no se usó para crear ninguno de los diccionarios que vamos a usar.
+								</p>
+
+								<p>
+									Ahora que ya tenemos unos pocos millones de hashes MD5 esperando a ser crackeados necesitamos los diccionarios. Yo para estas pruebas he decidido usar 8 diccionarios distintos y otro más que es un fragmento de kaonashi. Han habido muchos diccionarios que he decidido no incluir, ya que me dieron malos resultados para estas pruebas (por ejemplo teniendo una cantidad mucho mayor de contraseñas en comparación a diccionarios de los seleccionados y crackeando muchos menos hashes), aplicando esto también a las reglas. Os muestro la lista de los diccionarios, de menor a mayor número de contraseñas, con links para que los podáis descargar:
+								</p>
+
+								<ul>
+									<li><a href="https://github.com/praetorian-inc/Hob0Rules/blob/master/wordlists/rockyou.txt.gz">Rockyou</a> - El archiconocido RockYou nació de una brecha de usuarios con contraseñas en texto plano en la empresa con el mismo nombre asociada a MySpace (2009). Es el diccionario más popular y usado para cracking de hashes e incluso se incluye en distribuciones orientadas a pentesting. - <b>14.344.390</b> contraseñas.</li>
+
+									<li><a href="https://github.com/kaonashi-passwords/Kaonashi/tree/master/wordlists">Kaonashi14M</a> - Este es el fragmento del diccionario Kaonoshi que contiene la misma cantidad de contraseñas que rockyou.txt más una. - <b>14.344.391</b> contraseñas.</li>
+
+									<li><a href="https://github.com/cyclone-github/wordlist">Cyclone_hk</a> - Diccionario hecho por el sysadmin y cracker <a href="https://forum.hashkiller.io/index.php?members/cyclone.1022086/">Cyclone</a> para el foro de <a href="https://forum.hashkiller.io">Hashkiller</a>, que compiló contraseñas de otros diccionarios y filtraciones, limpió y ordenó por probabilidad. - <b>257.823.995</b> contraseñas.</li>
+
+									<li><a href="https://hashkiller.io/download">Hashkiller</a> - Diccionario completo hasta el 26-1-2020 del servicio <a href="https://hashkiller.io/">Hashkiller</a>. Este diccionario seguramente se irá modificando incluyendo nuevos hashes que rompa la comunidad por lo que aumentarán los hashes crackeados. - <b>266.518.037</b> contraseñas en la versión de estas pruebas.</li>
+
+									<li><a href="https://github.com/kaonashi-passwords/Kaonashi/tree/master/wordlists">Kaonashi</a> - Diccionario que cada vez va siendo más popular, contiene contraseñas obtenidas de diferentes filtraciones/diccionarios y se encuentran ordenadas por frecuencia. Los creadores de este genial diccionario son <a href="https://twitter.com/segofensiva">@segofensiva</a> y <a href="https://twitter.com/pcaro90">@pcaro90</a>. Este proyecto fue presentado en la <a href="https://www.youtube.com/watch?v=KbRwZ0AGhJQ">Rooted CON 2019</a> - <b>866.508.698</b> contraseñas.</li>
+
+									<li><a href="https://weakpass.com/wordlist/1851">HashesOrg2019</a> - Contiene las contraseñas encontradas en <a href="https://hashes.org/">HashesOrg</a> desde 2012 hasta 2019. - <b>1.279.729.139</b> contraseñas.</li>
+									
+									<li><a href="https://weakpass.com/wordlist/1919">Weakpass2a</a> - Diccionario extenso creado por <a href="https://twitter.com/w34kp455">@w34kp455</a> para su web <a href="https://weakpass.com">Weakpass</a>. - <b>7.884.602.871</b> contraseñas.</li>
+								</ul>
+
+								<p>
+									Por último nos quedan las reglas. Para estas pruebas he elegido 9 distintas que dan buenos resultados. De estas nueve, he podido usar seis con todos los diccionarios, pero para los tres últimos diccionarios los tres archivos .rule con más reglas han tenido que ser igualmente excluidos porque los ataques habrían durado demasiado. De todas formas se aprecia igualmente el potencial de todas las reglas.
+								</p>
+
+								<ul>
+									<li><a href="https://github.com/kaonashi-passwords/Kaonashi/tree/master/rules">yubaba64</a> - Pertenecientes al mismo proyecto que el diccionario Kaonashi. - <b>64</b> reglas.</li>
+
+									<li><a href="https://github.com/hashcat/hashcat/tree/master/rules">best64</a> - Incluidas en Hashcat, realmente no son 64 reglas como pensaríamos por el nombre. - <b>77</b> reglas.</li>
+
+									<li><a href="https://github.com/cyclone-github/rules">cyclone_250</a> -  Creadas por Cyclone (mencionado anteriormente) en base a pruebas suyas. - <b>250</b> reglas.</li>
+
+									<li><a href="https://forum.hashkiller.io/index.php?threads/hashcat-rules.41361/#post-270896">techtrip1000</a> - Creadas por el cracker <a href="https://forum.hashkiller.io/index.php?members/techtrip.1021525">techtrip</a> para el <a href="https://forum.hashkiller.io/">foro de Hashkiller</a>. - <b>1.000</b> reglas.</li>
+
+									<li><a href="https://forum.hashkiller.io/index.php?threads/top-rules.37302/">Top_3000</a> - Creadas por <a href="https://forum.hashkiller.io/index.php?members/tonys.1003845/">TonyS</a> para el foro de Hashkiller. - <b>3.000</b> reglas.</li>
+
+									<li><a href="https://forum.hashkiller.io/index.php?threads/top-rules.37302/">Toprules2020(5k)_ULM_001</a> - Creadas por <a href="https://forum.hashkiller.io/index.php?members/mr-cracker.1024137/">Mr.cracker</a> para el foro de Hashkiller. - <b>5.000</b> reglas.</li>
+
+									<li><a href="https://github.com/hashcat/hashcat/tree/master/rules">d3ad0ne</a> - Incluidas en Hashcat. - <b>34.097</b> reglas.</li>
+
+									<li><a href="https://github.com/kaonashi-passwords/Kaonashi/tree/master/rules">haku34K</a> - Pertenecientes también al mismo proyecto que el diccionario Kaonashi. También existen las reglas kamaji34K con la misma cantidad de reglas, pero estas últimas me daban en todas las pruebas un resultado ligeramente inferior por lo que se quedaron estas. - <b>34.101</b> reglas.</li>
+									
+									<li><a href="https://github.com/NotSoSecure/password_cracking_rules">OneRuleToRuleThemAll</a> - Creadas por <a href="https://notsosecure.com/one-rule-to-rule-them-all/">NotSoSecure</a>. - <b>51.995</b> reglas.</li>
+								</ul>
+
+								<p>
+									Para todas las pruebas he usado <a href="https://github.com/hashcat/hashcat/releases">Hashcat 6.1.1</a> en Windows 10 por compatibilidad de los drivers de mi GPU (GTX1660S) con los siguientes <a href="https://hashcat.net/wiki/doku.php?id=hashcat">argumentos</a> (para los ataques con reglas simplemente añadimos <code>-r rules\zzz.rule</code> al comando de abajo):
+									<pre><code>hashcat -O -a 0 -w 3 -m 0 -o NUL --potfile-disable hashes\xxx.txt wordlists\yyy.txt</code></pre>
+								</p>
+
+								<p>
+									Importante: los resultados de mis tests se muestran en diagramas de barras y como porcentaje de hashes rotos respecto al total, siendo el total variable dependiendo del diccionario. Esto quiere decir que para algunos diccionarios he tomado 1.000.000 hashes al azar mientras que para otros he tomado 100.000 hashes y para otros 10.000 con el fin de ganar algo de tiempo. Existe una regla conocida como la «regla 20/60/20» que consiste en una manera de visualizar la dificultad de las contraseñas de una lista: el primer 20% serían contraseñas conocidas o fácilmente deducibles mediante un ataque con diccionario, el 60% serían pequeñas o moderadas variaciones del 20% anterior y el 20% restante serían contraseñas largas, complejas o difíciles (regla tomada del libro <a href="https://www.amazon.com/dp/1793458618">«Hash Crack: Password Cracking Manual (v3)»</a>). Siguiendo esta lógica, si mezclamos las contraseñas y nos quedamos con una parte, en condiciones muy buenas tendríamos una proporción similar a lo anterior. Pero obviamente esto no tiene por qué suceder y efectivamente he comprobado que los resultados porcentuales variaban alguna centésima arriba o abajo al usar distintos fragmentos de la lista actual. Por lo tanto, las proporciones podrán diferir ligeramente en función de azar, políticas de contraseñas, idiomas predominantes y otros muchos factores pero esto no quiere decir que no podamos comprobar la eficacia de nuestros diccionarios y reglas bajo estas circunstancias.
+								</p>
+
+								<p>
+									<b>Primer test: rockyou y kaonashi14M.</b>
+								</p>
+
+								<p>
+									<span class="image featured"><img src="https://gatete.es/images/RockyouKaonashi14M.png" /></span>
+
+									<table>
+										<tr>
+										    <td></td>
+										    <th>Rockyou</th>
+											<th>Kaonashi14M</th>
+										</tr>
+										<tr>
+										    <th>Sin reglas</th>
+										    <td>7.92%</td>
+											<td>12.19%</td>
+										</tr>
+										<tr>
+										    <th>Yubaba64</th>
+										    <td>15.72%</td>
+											<td>20.13%</td>
+										</tr>
+										<tr>
+										    <th>Best64</th>
+										    <td>16.53%</td>
+											<td>19.91%</td>
+										</tr>
+										<tr>
+										    <th>Cyclone_250</th>
+										    <td>21.41%</td>
+											<td>24.23%</td>
+										</tr>
+										<tr>
+										    <th>Techtrip1000</th>
+										    <td>23.92%</td>
+											<td>27.16%</td>
+										</tr>
+										<tr>
+										    <th>Top_3000</th>
+										    <td>31.86%</td>
+											<td>34.34%</td>
+										</tr>
+										<tr>
+										    <th>Toprules(5k)</th>
+										    <td>33.71%</td>
+											<td>36.50%</td>
+										</tr>
+										<tr>
+										    <th>D3ad0ne</th>
+										    <td>35.11%</td>
+											<td>37.37%</td>
+										</tr>
+										<tr>
+										    <th>Haku34K</th>
+										    <td>38.65%</td>
+											<td>41.58%</td>
+										</tr>
+										<tr>
+										    <th>OneRule</th>
+										    <td>41.87%</td>
+											<td>44.05%</td>
+										</tr>	
+									</table>
+									Los resultados con Kaonashi14M han sido bastante mejores que con Rockyou, por lo que podríamos considerar a este primero como un buen sucesor del segundo. Sin embargo, en ataques a hashes rápidos de crackear como estos, es recomendable probar distintas combinaciones de diccionarios y reglas debido al poco tiempo que suelen tardar. Usando rockyou junto a kaonashi14M y las reglas OneRuleToRuleThemAll rompo el 45.60%, lo cual no es un aumento espectacular respecto a kaonashi14M solo con estas mismas reglas pero ya es algo que nos podría ser útil según las situaciones que se den. En cuanto a reglas podemos ver que las de best64 se encuentran muy igualadas con las de yubaba64 pero al contener estas últimas 13 reglas menos podemos decir que son más efectivas. El resto de reglas aumenta los hashes obtenidos en cada prueba con respecto a cada conjunto de reglas anterior más o menos como era de esperar. Combinando todas ellas, quitando las duplicadas y usando rockyou junto a Kaonashi14M obtengo el 47.92% de contraseñas, lo cual no está nada mal para el poco tiempo que lleva este ataque de diccionario contra hashes rápidos (menos de 10 minutos para crackear casi la mitad de hashes en mi equipo).
+								</p>
+
+								<p>
+									<b>Segundo test: hashkiller y cyclone_hk.</b>
+								</p>
+
+								<p>
+									<span class="image featured"><img src="https://gatete.es/images/Hashkiller-dictCyclone_hk.png" /></span>
+
+									<table>
+										<tr>
+										    <td></td>
+										    <th>Hashkiller-dict</th>
+											<th>Cyclone_hk</th>
+										</tr>
+										<tr>
+										    <th>Sin reglas</th>
+										    <td>24.97%</td>
+											<td>27.85%</td>
+										</tr>
+										<tr>
+										    <th>Yubaba64</th>
+										    <td>33.18%</td>
+											<td>35.63%</td>
+										</tr>
+										<tr>
+										    <th>Best64</th>
+										    <td>34.34%</td>
+											<td>35.96%</td>
+										</tr>
+										<tr>
+										    <th>Cyclone_250</th>
+										    <td>40.06%</td>
+											<td>41.13%</td>
+										</tr>
+										<tr>
+										    <th>Techtrip1000</th>
+										    <td>41.54%</td>
+											<td>42.87%</td>
+										</tr>
+										<tr>
+										    <th>Top_3000</th>
+										    <td>49.06%</td>
+											<td>49.52%</td>
+										</tr>
+										<tr>
+										    <th>Toprules(5k)</th>
+										    <td>50.68%</td>
+											<td>51.43%</td>
+										</tr>
+										<tr>
+										    <th>D3ad0ne</th>
+										    <td>55.02%</td>
+											<td>55.05%</td>
+										</tr>
+										<tr>
+										    <th>Haku34K</th>
+										    <td>56.97%</td>
+											<td>57.27%</td>
+										</tr>
+										<tr>
+										    <th>OneRule</th>
+										    <td>59.75%</td>
+											<td>61.32%</td>
+										</tr>	
+									</table>
+									En este caso, vemos que cyclone_hk logra romper algunos hashes más que el diccionario de Hashkiller. De todas formas, debemos tener en cuenta que este último está actualizado hasta el 26-1-2020, por lo que en futuras versiones públicas, seguramente logre superarlo. Vemos también que ambas rondan el 60% de contraseñas crackeadas usando el conjunto de reglas de OneRuleToRuleThemAll, estos dos últimos ataques de diccionario usando estas reglas rondaron la hora cada uno contra 1M de hashes aleatorios y los cuatro ataques con las reglas d3ad0ne y haku duraron unos 40 min cada uno.
+								</p>
+
+								<p>
+									<b>Tercer test: Kaonashi, HashesOrg2019 y Weakpass_2a.</b>
+								</p>
+
+								<p>
+									<span class="image featured"><img src="https://gatete.es/images/KaonashiHashesOrg2019Weakpass2a.png" /></span>
+
+									<table>
+										<tr>
+										    <td></td>
+										    <th>Kaonashi</th>
+										    <th>Hashes19</th>
+											<th>Wpass2a</th>
+										</tr>
+										<tr>
+										    <th>Sin reglas</th>
+										    <td>33.06%</td>
+											<td>39.02%</td>
+											<td>40.35%</td>
+										</tr>
+										<tr>
+										    <th>Yubaba64</th>
+										    <td>41.03%</td>
+											<td>46.34%</td>
+											<td>48.68%</td>
+										</tr>
+										<tr>
+										    <th>Best64</th>
+										    <td>41.43%</td>
+											<td>47.08%</td>
+											<td>48.77%</td>
+										</tr>
+										<tr>
+										    <th>Cyclone_250</th>
+										    <td>46.87%</td>
+											<td>51.55%</td>
+											<td>54.45%</td>
+										</tr>
+										<tr>
+										    <th>Techtrip1000</th>
+										    <td>48.06%</td>
+											<td>53.32%</td>
+											<td>56.29%</td>
+										</tr>
+										<tr>
+										    <th>Top_3000</th>
+										    <td>54.79%</td>
+											<td>59.81%</td>
+											<td>68.72%</td>
+										</tr>
+										<tr>
+										    <th>Toprules(5k)</th>
+										    <td>56.53%</td>
+											<td>61.84%</td>
+											<td>75.72%</td>
+										</tr>
+									</table>
+									En estos últimos tests, vemos que el diccionario de HashesOrg2019 está muy cerca del enorme Weakpass_2a hasta que se empiezan a meter más reglas como es de esperar debido a la gran cantidad de contraseñas que tiene este último, que consigue llegar a crackear tres de cada cuatro contraseñas de este set lo cual está súper bien. Por otra parte, algo bueno de Kaonashi es que, al estar ordenado por número de encuentros en las pruebas de los creadores, consigue crackear una buena parte del total al principio, lo cual viene muy bien especialmente cuando los hashes a crackear son lentos. También considero que los cuatro conjuntos de reglas creadas por miembros del foro de Hashkiller han tenido un buen desempeño, sorprendiéndome especialmente las dos últimas de 3.000 y 5.000.
+								</p>
+
+								<p>
+									<b>Mensaje final y opinión personal.</b>
+								</p>
+
+								<p>
+									Estas pruebas se han realizado en unas condiciones ya explicadas de las que podemos sacar nuestras propias conclusiones pero teniendo en cuenta que dependiendo de la situación en la que nos veamos podemos necesitar unos diccionarios y reglas de un tipo concreto, o quizás necesitamos crear reglas o una máscara propia porque conocemos algo sobre las constraseñas. Se pueden dar infinitos casos y haber infinitas variables, por lo que la información de esta publicación se debe tomar con pinzas. Eso no quiere decir que no podamos hacernos una idea de qué diccionarios y reglas pueden dar resultados mejores que otras.
+								</p>
+
+								<p>
+									Personalmente, considero que frente a hashes rápidos como fueron estos MD5, de los que no se conoce casi nada o nada, no está de más usar ataques de diccionarios buenos como los que he enseñado junto con reglas, así como usar ataques de máscaras y demás. Para hashes lentos si consideramos hacer ataques con diccionario, yo recomendaría usar Kaonashi por lo de que se encuentra ordenado por probabilidad, o Cyclone_hk que también lo está.
+								</p>
+
+								<p>
+									Hasta aquí el post de hoy, espero que te haya gustado. En una próxima publicación haré una guía fundamental sobre Hashcat con ejemplos prácticos orientada a personas que no lo hayan usado nunca o que no lo conozcan en profundidad y quieran sacarle provecho. Puedes seguirme en <a href="https://twitter.com/3lulz">Twitter</a> para enterarte de lo que escribo. ¡Felices fiestas!
+								</p>
 					</div>
 
 				<!-- Footer -->
@@ -112,11 +393,11 @@
 			</div>
 
 		<!-- Scripts -->
-			<script src="../assets/js/jquery.min.js"></script>
-			<script src="../assets/js/browser.min.js"></script>
-			<script src="../assets/js/breakpoints.min.js"></script>
-			<script src="../assets/js/util.js"></script>
-			<script src="../assets/js/main.js"></script>
+			<script src="https://gatete.es/assets/js/jquery.min.js"></script>
+			<script src="https://gatete.es/assets/js/browser.min.js"></script>
+			<script src="https://gatete.es/assets/js/breakpoints.min.js"></script>
+			<script src="https://gatete.es/assets/js/util.js"></script>
+			<script src="https://gatete.es/assets/js/main.js"></script>
 
 	</body>
 </html>
